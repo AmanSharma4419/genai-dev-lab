@@ -59,7 +59,7 @@ result = client.chat.completions.create(
     model="gpt-4",
     messages = [
         {"role":"system","content":system_prompt},
-        {"role":"user","content":"Hii How are you"}
+        {"role":"user","content":"Hey tell me why sky is blue?"}
     ]
 )
 
