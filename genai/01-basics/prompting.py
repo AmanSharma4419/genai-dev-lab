@@ -117,5 +117,5 @@ while True:
     )
 
     parsed_response = json.loads(result.choices[0].message.content)
-
+    messages.append({"role": "system", "content": system_prompt})
     print(parsed_response)
