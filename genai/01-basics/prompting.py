@@ -101,21 +101,21 @@ Rules:
 - Do not skip reasoning
 """
 
-messages = [
-   {"role": "system", "content": system_prompt},
-]
-
-
-user_inp = input(">")
-
 while True:
-   messages.append({"role": "user", "content": user_inp})
-   result = client.chat.completions.create(
-    model="gpt-4o",
-    response_format={"type": "json_object"},
-    temperature=0.5,
-    messages=messages
-)   
-   
-   parsed_response = json.loads(result.choices[0].message.content)
+    user_inp = input("> ")
 
+    messages = [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": user_inp}
+    ]
+
+    result = client.chat.completions.create(
+        model="gpt-4o",
+        response_format={"type": "json_object"},
+        temperature=0.5,
+        messages=messages
+    )
+
+    parsed_response = json.loads(result.choices[0].message.content)
+
+    print(parsed_response)
