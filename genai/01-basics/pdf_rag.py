@@ -20,8 +20,8 @@ docs = loader.load()
 
 # Split
 text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=1000,
-    chunk_overlap=200
+    chunk_size=500,
+    chunk_overlap=50
 )
 split_docs = text_splitter.split_documents(docs)
 
@@ -38,9 +38,15 @@ vector_store = QdrantVectorStore.from_documents(
 
 # Prompt template
 SYSTEM_PROMPT = """
-You are a helpful AI assistant.
-Answer ONLY from the given context.
-If the answer is not in the context, say "I don't know".
+You are a precise AI assistant.
+
+Use ONLY the provided context to answer.
+If the answer is not clearly in the context, say "I don't know".
+
+Guidelines:
+- Be concise and factual
+- Do not hallucinate
+- Prefer exact phrases from context
 
 Context:
 {context}
@@ -50,11 +56,14 @@ while True:
     user_inp = input("\n> ")
 
     # 1. Retrieve relevant docs
-    results = vector_store.similarity_search(user_inp, k=4)
-
+    results = vector_store.max_marginal_relevance_search(
+    user_inp,
+    k=10,
+    fetch_k=20,
+    lambda_mult=0.5
+)
     # 2. Convert docs → text
     context = "\n\n".join([doc.page_content for doc in results])
-
     # 3. Inject into prompt
     formatted_prompt = SYSTEM_PROMPT.format(context=context)
 
